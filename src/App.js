@@ -9,6 +9,7 @@ import BackgroundImage from "./assets/background.jpg";
 import Header from "./Components/Header";
 import ReportMarineLitter from "./Components/ReportMarineLitter";
 import EditMarinLItterInformation from "./Components/EditMarinLItterInformation";
+import ReportsOnMarineLitter from "./Components/ReportsOnMarineLitter";
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
         <Routes>
           <Route exact path="reportLitter" element={<ReportMarineLitter />} />
           <Route exact path="editLitterInformation" element={<EditMarinLItterInformation />} />
+          <Route exact path="reportsOnMarineLitter" element={<ReportsOnMarineLitter />} />
         </Routes>
       </Router>
     </Container>
