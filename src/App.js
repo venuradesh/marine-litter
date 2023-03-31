@@ -10,6 +10,7 @@ import Header from "./Components/Header";
 import ReportMarineLitter from "./Components/ReportMarineLitter";
 import EditMarinLItterInformation from "./Components/EditMarinLItterInformation";
 import ReportsOnMarineLitter from "./Components/ReportsOnMarineLitter";
+import InformationReport from "./Components/InformationReport";
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
           <Route exact path="reportLitter" element={<ReportMarineLitter />} />
           <Route exact path="editLitterInformation" element={<EditMarinLItterInformation />} />
           <Route exact path="reportsOnMarineLitter" element={<ReportsOnMarineLitter />} />
+          <Route exact path="infoReport" element={<InformationReport />} />
         </Routes>
       </Router>
     </Container>
