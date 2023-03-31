@@ -61,7 +61,6 @@ function ReportsOnMarineLitter() {
               return (
                 <tr {...row.getRowProps()}>
                   {row.cells.map((cell) => {
-                    console.log(cell.column.id === "images");
                     return (
                       <>
                         {cell.column.id !== "images" ? (
