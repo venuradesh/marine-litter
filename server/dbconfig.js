@@ -34,7 +34,7 @@ module.exports.initialize = () => {
   });
 };
 
-module.exports.addReport = async (formData) => {
+module.exports.addReport = (formData) => {
   return new Promise((resolve, reject) => {
     const newReport = new Report({
       email: formData.email,
@@ -59,6 +59,20 @@ module.exports.addReport = async (formData) => {
       .catch((err) => {
         console.log(err);
         reject("Error occured when saving: ", err);
+      });
+  });
+};
+
+module.exports.getReports = () => {
+  return new Promise((resolve, reject) => {
+    Report.find()
+      .exec()
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject("error occured when retrieving: ", err);
+        console.log("error:", err);
       });
   });
 };

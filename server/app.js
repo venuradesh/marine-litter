@@ -16,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
 
 //routes
+//adding the reports into the database
 app.post("/addReport", (req, res) => {
   let images = [];
   if (req.files) {
@@ -45,6 +46,18 @@ app.post("/addReport", (req, res) => {
     })
     .catch((err) => {
       res.status(501).send({ message: err, error: true });
+    });
+});
+
+//retreiving reports from the database
+app.get("/getReports", (req, res) => {
+  dataConfig
+    .getReports()
+    .then((result) => {
+      res.status(200).send({ message: result, error: false });
+    })
+    .catch((err) => {
+      res.status(409).send({ message: "error when fetching data from the database", error: true });
     });
 });
 
