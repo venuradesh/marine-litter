@@ -20,7 +20,7 @@ const App = () => {
         <Header />
         <Routes>
           <Route exact path="reportLitter" element={<ReportMarineLitter />} />
-          <Route exact path="editLitterInformation" element={<EditMarinLItterInformation />} />
+          <Route exact path="editLitterInformation/:id" element={<EditMarinLItterInformation />} />
           <Route exact path="reportsOnMarineLitter" element={<ReportsOnMarineLitter />} />
           <Route exact path="infoReport" element={<InformationReport />} />
         </Routes>

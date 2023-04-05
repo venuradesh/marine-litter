@@ -44,13 +44,15 @@ module.exports.addReport = (formData) => {
       date: formData.date,
       contact: formData.contact,
     });
-    formData.images.map((image) => {
-      newReport.images.push({
-        name: image.name,
-        type: image.type,
-        data: image.data,
+    if (formData.images.length > 0) {
+      formData.images.map((image) => {
+        newReport.images.push({
+          name: image.name,
+          type: image.type,
+          data: image.data,
+        });
       });
-    });
+    }
     newReport
       .save()
       .then(() => {
@@ -73,6 +75,62 @@ module.exports.getReports = () => {
       .catch((err) => {
         reject("error occured when retrieving: ", err);
         console.log("error:", err);
+      });
+  });
+};
+
+module.exports.getReportById = (id) => {
+  return new Promise((resolve, reject) => {
+    Report.findById(id)
+      .exec()
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject("error when fetching from id", err);
+      });
+  });
+};
+
+module.exports.updateReports = (id, formData) => {
+  return new Promise((resolve, reject) => {
+    Report.updateOne(
+      { _id: id },
+      {
+        $set: {
+          email: formData.email,
+          typeOfLitter: formData.typeofLitter,
+          location: formData.location,
+          desc: formData.desc,
+          date: formData.date,
+          contact: formData.contact,
+          images: [],
+        },
+      }
+    )
+      .exec()
+      .then((res) => {
+        if (formData.images.length > 0) {
+          Report.updateOne(
+            { _id: id },
+            {
+              $addToSet: { images: [...formData.images] },
+            }
+          )
+            .exec()
+            .then(() => {
+              resolve();
+            })
+            .catch((err) => {
+              reject(err);
+            });
+        } else {
+          resolve();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        reject("error when updating the reports", err);
       });
   });
 };

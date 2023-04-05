@@ -2,6 +2,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import styled from "styled-components";
 import { useTable } from "react-table";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 //images
 import Image from "../assets/image.png";
@@ -11,6 +12,7 @@ import Search from "../assets/search.png";
 const API_URL = "http://localhost:8080";
 
 function ReportsOnMarineLitter() {
+  const navigate = useNavigate();
   const [loaded, setLoaded] = useState(false);
   const [fetchedData, setFetchedData] = useState([]);
 
@@ -19,9 +21,9 @@ function ReportsOnMarineLitter() {
       .get(`${API_URL}/getReports`)
       .then((result) => {
         if (!result.data.error) {
-          console.log(result.data.message);
           setFetchedData([...result.data.message]);
           setLoaded(true);
+          console.log(result.data.message[0]._id);
         }
       })
       .catch((err) => {
@@ -96,7 +98,9 @@ function ReportsOnMarineLitter() {
                           );
                         })}
                         <td>
-                          <button className="edit">Edit</button>
+                          <button className="edit" onClick={() => navigate(`/editLitterInformation/${fetchedData[row.index]._id}`)}>
+                            Edit
+                          </button>
                         </td>
                         <td>
                           <button className="delete">Delete</button>

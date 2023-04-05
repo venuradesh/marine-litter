@@ -21,9 +21,11 @@ function ReportMarineLitter() {
     if (email && typeofLitter && desc && date && contact) {
       const formData = new FormData();
       setError("");
-      images.map((image) => {
-        formData.append("photo", image, image.name);
-      });
+      if (images.length > 0) {
+        images.map((image) => {
+          formData.append("photo", image, image.name);
+        });
+      }
 
       formData.append("email", email);
       formData.append("typeofLitter", typeofLitter);
