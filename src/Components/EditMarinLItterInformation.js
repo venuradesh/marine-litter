@@ -21,6 +21,7 @@ function EditMarinLItterInformation() {
   const [date, setDate] = useState("");
   const [contact, setContact] = useState("");
   const [images, setImages] = useState([]);
+  const [imagesChanged, setImagesChanged] = useState(false);
 
   useEffect(() => {
     axios
@@ -100,18 +101,29 @@ function EditMarinLItterInformation() {
               <label htmlFor="images">
                 Images: <br />
               </label>
-              {!data.images.legth === 0 ? (
+              {data.images.length === 0 ? (
                 <div className="file">
                   <input type="file" name="images" id="images" multiple accept=".jpg,.png,.jpeg" onChange={(e) => setImages((prev) => [...e.target.files])} />
                 </div>
               ) : (
-                <div className="file with-images">
-                  <input type="file" name="images" id="images" multiple accept=".jpg,.png,.jpeg" className="image-holder" onChange={(e) => setImages((prev) => [...e.target.files])} />
-                  {data.images.map((image, key) => (
-                    <img src={Image} alt="pictureHolder" key={key} />
-                  ))}
-                  <button onClick={() => document.getElementById("images").click()}>Change</button>
-                </div>
+                <>
+                  <div className="file with-images">
+                    <input
+                      type="file"
+                      name="images"
+                      id="images"
+                      multiple
+                      accept=".jpg,.png,.jpeg"
+                      className="image-holder"
+                      onChange={(e) => {
+                        setImages((prev) => [...e.target.files]);
+                        setImagesChanged(true);
+                      }}
+                    />
+                    {imagesChanged ? images.map((image, key) => <img src={Image} alt="pictureHolder" key={key} />) : data.images.map((image, key) => <img src={Image} alt="pictureHolder" key={key} />)}
+                    <button onClick={() => document.getElementById("images").click()}>Change</button>
+                  </div>
+                </>
               )}
             </div>
             <div className="desc item sub-item-available">

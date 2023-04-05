@@ -8,7 +8,7 @@ const API_URL = "http://localhost:8080";
 function ReportMarineLitter() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("'");
-  const [typeofLitter, setTypeofLitter] = useState("");
+  const [typeofLitter, setTypeofLitter] = useState("plastic");
   const [location, setLocation] = useState("");
   const [desc, setDesc] = useState("");
   const [date, setDate] = useState("");
@@ -62,8 +62,8 @@ function ReportMarineLitter() {
               Type of Litter:<span>*</span>
             </label>
             <select onChange={(e) => setTypeofLitter(e.target.value)}>
-              <option value="plastic">Plastic Bottle</option>
-              <option value="cigarette">Cigarette butts</option>
+              <option value="plastic bottles">Plastic Bottle</option>
+              <option value="cigarette butts">Cigarette butts</option>
               <option value="food wrappers">Food wrappers and containers</option>
               <option value="glass bottles">Glass bottles</option>
               <option value="metal can">Metal Can</option>
