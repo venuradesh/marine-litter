@@ -1,26 +1,37 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import styled from "styled-components";
 import { useTable } from "react-table";
+import axios from "axios";
 
 //images
 import Image from "../assets/image.png";
 import Search from "../assets/search.png";
 
+//constants
+const API_URL = "http://localhost:8080";
+
 function ReportsOnMarineLitter() {
-  const data = useMemo(
-    () => [
-      { type: "Plastic Bottle", location: "Galle", date: "2023-02-23", desc: "I found this plastic bottle from Galle Jungle beach.", images: ["", ""] },
-      { type: "cigaratte butts", location: "Unawatuna", date: "2023-02-23", desc: "Cooking oil is the name of this bottle", images: [""] },
-      { type: "food wrappers and containers", location: "Hikkaduwa", date: "2023-02-23", desc: "", images: ["", "", ""] },
-      { type: "Glass bottles", location: "Galle", date: "2023-02-23", desc: "Cooking oil is the naem of this bottle", images: ["", ""] },
-      { type: "Metal can", location: "Negombo", date: "2023-02-23", desc: "I found this plastic bottle from Galle Jungle beach.", images: [""] },
-    ],
-    []
-  );
+  const [loaded, setLoaded] = useState(false);
+  const [fetchedData, setFetchedData] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/getReports`)
+      .then((result) => {
+        if (!result.data.error) {
+          console.log(result.data.message);
+          setFetchedData([...result.data.message]);
+          setLoaded(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const columns = useMemo(
     () => [
-      { Header: "Type of Litter", accessor: "type" },
+      { Header: "Type of Litter", accessor: "typeOfLitter" },
       { Header: "Location", accessor: "location" },
       { Header: "Date of observed", accessor: "date" },
       { Header: "Description", accessor: "desc" },
@@ -29,7 +40,7 @@ function ReportsOnMarineLitter() {
     []
   );
 
-  const tableInstance = useTable({ columns, data });
+  const tableInstance = useTable({ columns, data: fetchedData });
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
 
   return (
@@ -47,48 +58,68 @@ function ReportsOnMarineLitter() {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+                {headerGroup.headers.map((column, key) => (
+                  <th {...column.getHeaderProps()} key={key}>
+                    {column.render("Header")}
+                  </th>
                 ))}
                 <th></th>
                 <th></th>
               </tr>
             ))}
           </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => {
+          {loaded ? (
+            <>
+              {fetchedData.length > 0 ? (
+                <tbody {...getTableBodyProps()}>
+                  {rows.map((row) => {
+                    prepareRow(row);
                     return (
-                      <>
-                        {cell.column.id !== "images" ? (
-                          <>
-                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                          </>
-                        ) : (
-                          <>
-                            <td>
-                              {cell.value.map((data) => (
-                                <img src={Image} alt="imagewrapper" />
-                              ))}
-                            </td>
-                          </>
-                        )}
-                      </>
+                      <tr {...row.getRowProps()}>
+                        {row.cells.map((cell) => {
+                          return (
+                            <>
+                              {cell.column.id !== "images" ? (
+                                <>
+                                  <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                </>
+                              ) : (
+                                <>
+                                  <td>
+                                    {cell.value.map((data, key) => (
+                                      <img src={Image} key={key} alt="imagewrapper" />
+                                    ))}
+                                  </td>
+                                </>
+                              )}
+                            </>
+                          );
+                        })}
+                        <td>
+                          <button className="edit">Edit</button>
+                        </td>
+                        <td>
+                          <button className="delete">Delete</button>
+                        </td>
+                      </tr>
                     );
                   })}
-                  <td>
-                    <button className="edit">Edit</button>
-                  </td>
-                  <td>
-                    <button className="delete">Delete</button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
+                </tbody>
+              ) : (
+                <tbody>
+                  <tr className="loading">
+                    <td>No data available</td>
+                  </tr>
+                </tbody>
+              )}
+            </>
+          ) : (
+            <tbody>
+              <tr className="loading">
+                <td>Loading</td>
+              </tr>
+            </tbody>
+          )}
         </table>
       </div>
     </Container>
@@ -188,7 +219,10 @@ const Container = styled.div`
           color: white;
           font-size: 0.8rem;
           border-bottom: 1px solid white;
+          padding-top: 10px;
+          padding-bottom: 10px;
           opacity: 0.8;
+          max-width: 450px;
 
           img {
             width: 20px;
@@ -216,6 +250,12 @@ const Container = styled.div`
                 background-color: #fd0a54;
               }
             }
+          }
+        }
+
+        &.loading {
+          td {
+            border-bottom: none;
           }
         }
       }
