@@ -15,6 +15,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
 
+//initializing
+dataConfig
+  .initialize()
+  .then(() => {
+    app.listen(HTTP_PORT, () => {
+      console.log("Server listening on port: ", HTTP_PORT);
+    });
+  })
+  .catch((err) => {
+    console.log("Unable to start the Server", err);
+  });
+
 //routes
 //adding the reports into the database
 app.post("/addReport", (req, res) => {
@@ -25,7 +37,7 @@ app.post("/addReport", (req, res) => {
         images.push({ type: image.mimetype, data: image.data, name: image.name });
       });
     } else {
-      images.push(req.files.photo);
+      images.push({ type: req.files.photo.mimetype, data: req.files.photo.data, name: req.files.photo.name });
     }
   }
 
@@ -61,13 +73,49 @@ app.get("/getReports", (req, res) => {
     });
 });
 
-dataConfig
-  .initialize()
-  .then(() => {
-    app.listen(HTTP_PORT, () => {
-      console.log("Server listening on port: ", HTTP_PORT);
+//get the route by id
+app.get("/getReportById", (req, res) => {
+  const id = req.headers.id;
+  dataConfig
+    .getReportById(id)
+    .then((result) => {
+      res.status(200).send({ message: result, error: false });
+    })
+    .catch((err) => res.status(409).send({ messaeg: err, error: true }));
+});
+
+//update report
+app.put("/updateReports", (req, res) => {
+  const id = req.body.id;
+  const images = [];
+
+  if (req.files) {
+    if (Array.isArray(req.files.photo)) {
+      req.files.photo.map((image) => {
+        images.push({ type: image.mimetype, data: image.data, name: image.name });
+      });
+    } else {
+      images.push({ type: req.files.photo.mimetype, data: req.files.photo.data, name: req.files.photo.name });
+    }
+  }
+
+  const formData = {
+    email: req.body.email,
+    typeofLitter: req.body.typeofLitter,
+    location: req.body.location,
+    desc: req.body.desc,
+    date: req.body.date,
+    contact: req.body.contact,
+    images: images,
+  };
+
+  dataConfig
+    .updateReports(id, formData)
+    .then(() => {
+      res.status(200).send({ message: "done", error: false });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(409).send({ message: err, error: true });
     });
-  })
-  .catch((err) => {
-    console.log("Unable to start the Server", err);
-  });
+});
