@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 //images
 import BackgroundImage from "./assets/background.jpg";
@@ -19,6 +19,7 @@ const App = () => {
       <Router>
         <Header />
         <Routes>
+          <Route exact path="/" element={<Navigate to="/reportLitter" />} />
           <Route exact path="reportLitter" element={<ReportMarineLitter />} />
           <Route exact path="editLitterInformation/:id" element={<EditMarinLItterInformation />} />
           <Route exact path="reportsOnMarineLitter" element={<ReportsOnMarineLitter />} />

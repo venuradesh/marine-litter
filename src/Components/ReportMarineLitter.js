@@ -105,7 +105,7 @@ function ReportMarineLitter() {
           <div className="btns item">
             <label htmlFor=""></label>
             <div className="btn-container">
-              <button type="reset " className="btn btn-reset">
+              <button type="reset " className="btn btn-reset" onClick={() => navigate("/reportsOnMarineLitter")}>
                 Cancel
               </button>
               <button type="submit " className="btn btn-submit" onClick={(e) => onSubmitClick(e)}>
