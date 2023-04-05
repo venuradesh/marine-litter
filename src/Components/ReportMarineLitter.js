@@ -1,7 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+const API_URL = "http://localhost:8080";
 
 function ReportMarineLitter() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("'");
+  const [typeofLitter, setTypeofLitter] = useState("");
+  const [location, setLocation] = useState("");
+  const [desc, setDesc] = useState("");
+  const [date, setDate] = useState("");
+  const [contact, setContact] = useState("");
+  const [images, setImages] = useState([]);
+  const [err, setError] = useState("");
+
+  const onSubmitClick = (e) => {
+    e.preventDefault();
+    if (email && typeofLitter && desc && date && contact) {
+      const formData = new FormData();
+      setError("");
+      images.map((image) => {
+        formData.append("photo", image, image.name);
+      });
+
+      formData.append("email", email);
+      formData.append("typeofLitter", typeofLitter);
+      formData.append("location", location);
+      formData.append("desc", desc);
+      formData.append("date", date);
+      formData.append("contact", contact);
+
+      axios
+        .post(`${API_URL}/addReport`, formData)
+        .then((res) => {
+          navigate("/reportsOnMarineLitter");
+        })
+        .catch((err) => console.log(err));
+    } else {
+      setError("Please fill Required Fields");
+    }
+  };
+
   return (
     <Container>
       <div className="container">
@@ -12,13 +53,13 @@ function ReportMarineLitter() {
             <label htmlFor="email">
               Email:<span>*</span>{" "}
             </label>
-            <input type="email" name="email" id="email" />
+            <input type="email" name="email" id="email" onChange={(e) => setEmail(e.target.value)} />
           </div>
           <div className="type item">
             <label htmlFor="type">
               Type of Litter:<span>*</span>
             </label>
-            <select>
+            <select onChange={(e) => setTypeofLitter(e.target.value)}>
               <option value="plastic">Plastic Bottle</option>
               <option value="cigarette">Cigarette butts</option>
               <option value="food wrappers">Food wrappers and containers</option>
@@ -28,7 +69,7 @@ function ReportMarineLitter() {
           </div>
           <div className="location item">
             <label htmlFor="location">Location: </label>
-            <input type="text" name="location" id="location" />
+            <input type="text" name="location" id="location" onChange={(e) => setLocation(e.target.value)} />
           </div>
           <div className="images item sub-item-available">
             <label htmlFor="images">
@@ -36,7 +77,7 @@ function ReportMarineLitter() {
               <span className="sub">A clear picture of the showing details of manufacture | Producer | country origin | bar code | any relavant details</span>
             </label>
             <div className="file">
-              <input type="file" name="images" id="images" multiple accept=".jpg,.png,.jpeg" />
+              <input type="file" name="images" id="images" multiple accept=".jpg,.png,.jpeg" onChange={(e) => setImages((prev) => [...e.target.files])} />
             </div>
           </div>
           <div className="desc item sub-item-available">
@@ -44,27 +85,28 @@ function ReportMarineLitter() {
               Description:<span>*</span> <br />
               <span className="sub">Please provide as much as information of the incident (Location, visible details, Number of cases, Other related information)</span>
             </label>
-            <textarea type="text" name="description" id="description" />
+            <textarea type="text" name="description" id="description" onChange={(e) => setDesc(e.target.value)} />
           </div>
           <div className="date item">
             <label htmlFor="date_observed">
               Date observed:<span>*</span>{" "}
             </label>
-            <input type="date" name="date_observed" id="date_observed" />
+            <input type="date" name="date_observed" id="date_observed" onChange={(e) => setDate(e.target.value)} />
           </div>
           <div className="contact item">
             <label htmlFor="tel">
               Contact Details:<span>*</span>{" "}
             </label>
-            <input type="tel" name="tel" id="tel" />
+            <input type="tel" name="tel" id="tel" onChange={(e) => setContact(e.target.value)} />
           </div>
+          {err ? <div className="error">Please fill required fields</div> : <></>}
           <div className="btns item">
             <label htmlFor=""></label>
             <div className="btn-container">
               <button type="reset " className="btn btn-reset">
                 Cancel
               </button>
-              <button type="submit " className="btn btn-submit">
+              <button type="submit " className="btn btn-submit" onClick={(e) => onSubmitClick(e)}>
                 Save
               </button>
             </div>
@@ -89,7 +131,9 @@ const Container = styled.div`
     height: max-content;
     position: relative;
     top: 130px;
-    padding: 30px;
+    padding-inline: 30px;
+    padding-bottom: 10px;
+    padding-top: 20px;
     z-index: 10;
 
     .background {
@@ -112,6 +156,13 @@ const Container = styled.div`
     }
 
     .form {
+      .error {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ff7987;
+      }
+
       .item {
         display: flex;
         column-gap: 10px;
