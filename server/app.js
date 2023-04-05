@@ -21,7 +21,7 @@ app.post("/addReport", (req, res) => {
   if (req.files) {
     if (Array.isArray(req.files.photo)) {
       req.files.photo.map((image) => {
-        images.push({ type: image.mimetype, data: image.name });
+        images.push({ type: image.mimetype, data: image.data, name: image.name });
       });
     } else {
       images.push(req.files.photo);
