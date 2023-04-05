@@ -119,3 +119,16 @@ app.put("/updateReports", (req, res) => {
       res.status(409).send({ message: err, error: true });
     });
 });
+
+//delete report
+app.delete("/deleteReport/:id", (req, res) => {
+  const id = req.params.id;
+  dataConfig
+    .deleteReport(id)
+    .then(() => {
+      res.status(202).send({ message: "ok", error: false });
+    })
+    .catch((err) => {
+      res.status(409).send({ message: err, error: true });
+    });
+});

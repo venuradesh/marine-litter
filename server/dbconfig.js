@@ -94,43 +94,61 @@ module.exports.getReportById = (id) => {
 
 module.exports.updateReports = (id, formData) => {
   return new Promise((resolve, reject) => {
-    Report.updateOne(
-      { _id: id },
-      {
-        $set: {
-          email: formData.email,
-          typeOfLitter: formData.typeofLitter,
-          location: formData.location,
-          desc: formData.desc,
-          date: formData.date,
-          contact: formData.contact,
-          images: [],
-        },
-      }
-    )
+    Report.findById(id)
       .exec()
-      .then((res) => {
-        if (formData.images.length > 0) {
-          Report.updateOne(
-            { _id: id },
-            {
-              $addToSet: { images: [...formData.images] },
-            }
-          )
-            .exec()
-            .then(() => {
+      .then((result) => {
+        Report.updateOne(
+          { _id: id },
+          {
+            $set: {
+              email: formData.email,
+              typeOfLitter: formData.typeofLitter,
+              location: formData.location,
+              desc: formData.desc,
+              date: formData.date,
+              contact: formData.contact,
+              images: formData.images.length > 0 ? [] : [...result.images],
+            },
+          }
+        )
+          .exec()
+          .then((res) => {
+            if (formData.images.length > 0) {
+              Report.updateOne(
+                { _id: id },
+                {
+                  $addToSet: { images: [...formData.images] },
+                }
+              )
+                .exec()
+                .then(() => {
+                  resolve();
+                })
+                .catch((err) => {
+                  reject(err);
+                });
+            } else {
               resolve();
-            })
-            .catch((err) => {
-              reject(err);
-            });
-        } else {
-          resolve();
-        }
+            }
+          })
+          .catch((err) => {
+            reject("error when updating the reports");
+          });
       })
       .catch((err) => {
-        console.log(err);
-        reject("error when updating the reports", err);
+        reject("error when finding");
+      });
+  });
+};
+
+module.exports.deleteReport = (id) => {
+  return new Promise((resolve, reject) => {
+    Report.findByIdAndRemove(id)
+      .then((res) => {
+        resolve();
+      })
+      .catch((err) => {
+        reject("error when deleting the report");
       });
   });
 };

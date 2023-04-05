@@ -15,6 +15,7 @@ function ReportsOnMarineLitter() {
   const navigate = useNavigate();
   const [loaded, setLoaded] = useState(false);
   const [fetchedData, setFetchedData] = useState([]);
+  const [updated, setUpdated] = useState(false);
 
   useEffect(() => {
     axios
@@ -29,7 +30,20 @@ function ReportsOnMarineLitter() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [updated]);
+
+  const onDeleteClick = (id) => {
+    setFetchedData([]);
+    setLoaded(false);
+    axios
+      .delete(`${API_URL}/deleteReport/${id}`)
+      .then((res) => {
+        if (res.data.message === "ok") {
+          setUpdated((prev) => !prev);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
 
   const columns = useMemo(
     () => [
@@ -103,7 +117,9 @@ function ReportsOnMarineLitter() {
                           </button>
                         </td>
                         <td>
-                          <button className="delete">Delete</button>
+                          <button className="delete" onClick={() => onDeleteClick(fetchedData[row.index]._id)}>
+                            Delete
+                          </button>
                         </td>
                       </tr>
                     );
