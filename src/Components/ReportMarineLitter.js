@@ -8,8 +8,8 @@ const API_URL = "http://localhost:8080";
 function ReportMarineLitter() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("'");
-  const [typeofLitter, setTypeofLitter] = useState("plastic");
-  const [location, setLocation] = useState("");
+  const [typeofLitter, setTypeofLitter] = useState("");
+  const [location, setLocation] = useState("colombo");
   const [desc, setDesc] = useState("");
   const [date, setDate] = useState("");
   const [contact, setContact] = useState("");
@@ -57,21 +57,34 @@ function ReportMarineLitter() {
             </label>
             <input type="email" name="email" id="email" onChange={(e) => setEmail(e.target.value)} />
           </div>
+          <div className="litter-type item">
+            <label htmlFor="litter-type">
+              Litter type:<span>*</span>{" "}
+            </label>
+            <input type="text" name="litter-type" id="litter-type" onChange={(e) => setTypeofLitter(e.target.value)} />
+          </div>
           <div className="type item">
             <label htmlFor="type">
-              Type of Litter:<span>*</span>
+              Location:<span>*</span>
             </label>
-            <select onChange={(e) => setTypeofLitter(e.target.value)}>
-              <option value="plastic bottles">Plastic Bottle</option>
-              <option value="cigarette butts">Cigarette butts</option>
-              <option value="food wrappers">Food wrappers and containers</option>
-              <option value="glass bottles">Glass bottles</option>
-              <option value="metal can">Metal Can</option>
+            <select id="location" onChange={(e) => setLocation(e.target.value)}>
+              <option value="ampara">Ampara</option>
+              <option value="batticaloa">batticaloa</option>
+              <option value="colombo" selected>
+                colombo
+              </option>
+              <option value="galle">galle</option>
+              <option value="gampaha">gampaha</option>
+              <option value="hambantota">Hambantota</option>
+              <option value="jaffna">jaffna</option>
+              <option value="kalutara">kalutara</option>
+              <option value="kilinochchi">kilinochchi</option>
+              <option value="mannar">mannar</option>
+              <option value="matara">matara</option>
+              <option value="mullativu">mullativu</option>
+              <option value="puttalam">puttalam</option>
+              <option value="trincomalee">trincomalee</option>
             </select>
-          </div>
-          <div className="location item">
-            <label htmlFor="location">Location: </label>
-            <input type="text" name="location" id="location" onChange={(e) => setLocation(e.target.value)} />
           </div>
           <div className="images item sub-item-available">
             <label htmlFor="images">
