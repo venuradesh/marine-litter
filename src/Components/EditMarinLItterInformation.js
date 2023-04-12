@@ -81,21 +81,32 @@ function EditMarinLItterInformation() {
               </label>
               <input type="email" name="email" id="email" defaultValue={`${data.email}`} onChange={(e) => setEmail(e.target.value)} />
             </div>
+            <div className="litter-type item">
+              <label htmlFor="litter-type">
+                Litter type:<span>*</span>{" "}
+              </label>
+              <input type="text" name="litter-type" id="litter-type" defaultValue={data.typeOfLitter} onChange={(e) => setTypeofLitter(e.target.value)} />
+            </div>
             <div className="type item">
               <label htmlFor="type">
-                Type of Litter:<span>*</span>
+                Location:<span>*</span>
               </label>
-              <select id="litter-type" defaultValue={data.typeOfLitter} onChange={(e) => setTypeofLitter(e.target.value)}>
-                <option value="plastic">Plastic Bottle</option>
-                <option value="cigarette">Cigarette butts</option>
-                <option value="food wrappers">Food wrappers and containers</option>
-                <option value="glass bottles">Glass bottles</option>
-                <option value="metal can">Metal Can</option>
+              <select id="location" defaultValue={data.location} onChange={(e) => setLocation(e.target.value)}>
+                <option value="ampara">Ampara</option>
+                <option value="batticaloa">batticaloa</option>
+                <option value="colombo">colombo</option>
+                <option value="galle">galle</option>
+                <option value="gampaha">gampaha</option>
+                <option value="hambantota">Hambantota</option>
+                <option value="jaffna">jaffna</option>
+                <option value="kalutara">kalutara</option>
+                <option value="kilinochchi">kilinochchi</option>
+                <option value="mannar">mannar</option>
+                <option value="matara">matara</option>
+                <option value="mullativu">mullativu</option>
+                <option value="puttalam">puttalam</option>
+                <option value="trincomalee">trincomalee</option>
               </select>
-            </div>
-            <div className="location item">
-              <label htmlFor="location">Location: </label>
-              <input type="text" name="location" id="location" defaultValue={data.location} onChange={(e) => setLocation(e.target.value)} />
             </div>
             <div className="images item sub-item-available">
               <label htmlFor="images">
