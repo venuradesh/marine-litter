@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import InputField from "./Parts/InputField";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
@@ -13,8 +15,8 @@ function Login() {
         <div className="login">
           <div className="heading">Login</div>
           <div className="input-container">
-            <InputField type="text" content="User Name" name="username" id="username" onChange={setUsername} />
-            <InputField type="password" content="Password" name="password" id="password" onChange={setPassword} />
+            <InputField type="text" content="User Name" id="username" onChange={setUsername} />
+            <InputField type="password" content="Password" id="password" onChange={setPassword} />
           </div>
           {err ? <div className="error-container">{err}*</div> : <></>}
           <div className="btn-container">
@@ -22,7 +24,9 @@ function Login() {
           </div>
         </div>
 
-        <div className="create-acc">Create an account</div>
+        <div className="create-acc" onClick={() => navigate("/register")}>
+          Create an account
+        </div>
       </div>
     </Container>
   );
