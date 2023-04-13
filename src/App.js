@@ -11,6 +11,7 @@ import ReportMarineLitter from "./Components/ReportMarineLitter";
 import EditMarinLItterInformation from "./Components/EditMarinLItterInformation";
 import ReportsOnMarineLitter from "./Components/ReportsOnMarineLitter";
 import InformationReport from "./Components/InformationReport";
+import Login from "./Components/Login";
 
 const App = () => {
   return (
@@ -19,7 +20,7 @@ const App = () => {
       <Router>
         <Header />
         <Routes>
-          <Route exact path="/" element={<Navigate to="/reportLitter" />} />
+          <Route exact path="/" element={<Login />} />
           <Route exact path="reportLitter" element={<ReportMarineLitter />} />
           <Route exact path="editLitterInformation/:id" element={<EditMarinLItterInformation />} />
           <Route exact path="reportsOnMarineLitter" element={<ReportsOnMarineLitter />} />
