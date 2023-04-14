@@ -2,12 +2,40 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import InputField from "./Parts/InputField";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+const API_URL = "http://localhost:8080";
 
 function Login() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
+
+  const onSubmitClick = () => {
+    if (email && password) {
+      axios
+        .get(`${API_URL}/checkUser`, {
+          headers: {
+            email,
+            password,
+          },
+        })
+        .then((res) => {
+          if (res.data.valid) {
+            window.localStorage.setItem("userId", res.data.userId);
+            navigate("/reportLitter");
+          } else {
+            setErr(res.data.message);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      setErr("Please fill email and Password");
+    }
+  };
 
   return (
     <Container>
@@ -15,12 +43,14 @@ function Login() {
         <div className="login">
           <div className="heading">Login</div>
           <div className="input-container">
-            <InputField type="text" content="User Name" id="username" onChange={setUsername} />
+            <InputField type="text" content="Email" id="email" onChange={setEmail} />
             <InputField type="password" content="Password" id="password" onChange={setPassword} />
           </div>
           {err ? <div className="error-container">{err}*</div> : <></>}
           <div className="btn-container">
-            <div className="btn">Login</div>
+            <div className="btn" onClick={() => onSubmitClick()}>
+              Login
+            </div>
           </div>
         </div>
 

@@ -16,8 +16,18 @@ const litterReport = new mongoose.Schema({
   images: [LitterImage],
 });
 
+const user = new mongoose.Schema({
+  firstName: String,
+  lastName: String,
+  email: String,
+  orgName: String,
+  position: String,
+  password: String,
+});
+
 let Report;
 let Image;
+let User;
 
 module.exports.initialize = () => {
   return new Promise((resolve, reject) => {
@@ -29,6 +39,7 @@ module.exports.initialize = () => {
     db.once("open", () => {
       Report = db.model("litterReports", litterReport);
       Image = db.model("litterImages", LitterImage);
+      User = db.model("user", user);
       resolve();
     });
   });
@@ -149,6 +160,50 @@ module.exports.deleteReport = (id) => {
       })
       .catch((err) => {
         reject("error when deleting the report");
+      });
+  });
+};
+
+module.exports.addUser = (userData) => {
+  return new Promise((resolve, reject) => {
+    const newUser = new User({
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      email: userData.email,
+      orgName: userData.orgName,
+      position: userData.position,
+      password: userData.password,
+    });
+
+    newUser
+      .save()
+      .then(() => {
+        resolve();
+      })
+      .catch((err) => {
+        console.log(err);
+        reject("error in adding user to the database");
+      });
+  });
+};
+
+module.exports.checkUser = (email, password) => {
+  return new Promise((resolve, reject) => {
+    User.find({ email: email })
+      .exec()
+      .then((res) => {
+        if (res.length > 0) {
+          if (res[0].password === password) {
+            resolve({ message: "password matching", valid: true, userId: res[0]._id });
+          } else {
+            resolve({ message: "password incorrect", valid: false });
+          }
+        } else {
+          resolve({ message: "No user with that email", valid: false });
+        }
+      })
+      .catch((err) => {
+        reject("error finding the user");
       });
   });
 };
