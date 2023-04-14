@@ -1,11 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 //images
 import BackgroundLogo from "../assets/logo.png";
 import User from "../assets/user.png";
 
 function Header() {
+  const navigate = useNavigate();
+  const [logoutClicked, setLogoutClicked] = useState(false);
+
+  const onLoginClicked = () => {
+    window.localStorage.removeItem("userId");
+    setLogoutClicked(false);
+    navigate("/login");
+  };
+
   return (
     <Container>
       <div className="container">
@@ -22,7 +32,10 @@ function Header() {
           <div className="shop nav-item">Shop</div>
         </div>
         <div className="profile">
-          <img src={User} alt="user-profile" />
+          <img src={User} alt="user-profile" onClick={() => (!logoutClicked ? setLogoutClicked(true) : setLogoutClicked(false))} />
+          <div className={`logout-section ${logoutClicked ? "active" : ""}`} onClick={() => onLoginClicked()}>
+            Logout
+          </div>
         </div>
       </div>
     </Container>
@@ -47,7 +60,6 @@ const Container = styled.div`
     height: 80px;
     border-radius: 25px;
     position: relative;
-    overflow: hidden;
     padding: 0px 20px;
     display: flex;
     justify-content: space-between;
@@ -61,6 +73,7 @@ const Container = styled.div`
       position: absolute;
       top: 0;
       left: 0;
+      border-radius: 25px;
     }
 
     .logo {
@@ -88,9 +101,36 @@ const Container = styled.div`
     .profile {
       display: flex;
       align-items: center;
+      flex-direction: column;
+      position: relative;
 
       img {
         width: 40px;
+        cursor: pointer;
+      }
+
+      .logout-section {
+        width: 100px;
+        height: 40px;
+        position: absolute;
+        bottom: -70px;
+        left: -40px;
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transform: scaleY(0);
+        transform-origin: top;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: lightgray;
+        }
+
+        &.active {
+          transform: scaleY(1);
+        }
       }
     }
   }
