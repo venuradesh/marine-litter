@@ -132,3 +132,26 @@ app.delete("/deleteReport/:id", (req, res) => {
       res.status(409).send({ message: err, error: true });
     });
 });
+
+// User Section
+app.post("/addUser", (req, res) => {
+  dataConfig
+    .addUser(req.body)
+    .then(() => {
+      res.status(201).send({ message: "user created", error: false });
+    })
+    .catch((err) => {
+      res.status(409).send({ message: err, error: true });
+    });
+});
+
+app.get("/checkUser", (req, res) => {
+  dataConfig
+    .checkUser(req.headers.email, req.headers.password)
+    .then((result) => {
+      res.status(200).send(result);
+    })
+    .catch((err) => {
+      res.status(409).send({ message: err, error: true });
+    });
+});

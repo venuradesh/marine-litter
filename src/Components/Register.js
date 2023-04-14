@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 //components
 import InputField from "./Parts/InputField";
+
+//constants
+const API_URL = "http://localhost:8080";
 
 function Register() {
   const navigate = useNavigate();
@@ -11,6 +15,34 @@ function Register() {
   const [lastName, setLastName] = useState("");
   const [orgName, setOrgName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [position, setPosition] = useState("member");
+  const [err, setErr] = useState("");
+
+  const onSubmitClick = () => {
+    if (firstName && lastName && orgName && email && password) {
+      axios
+        .post(`${API_URL}/addUser`, {
+          firstName,
+          lastName,
+          orgName,
+          email,
+          password,
+          position,
+        })
+        .then((res) => {
+          setErr("");
+          if (!res.data.error) {
+            navigate("/login");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      setErr("Fill all the fields");
+    }
+  };
 
   return (
     <Container>
@@ -22,11 +54,12 @@ function Register() {
         <div className="form-container">
           <InputField content="First name" id="firstname" type="text" onChange={setFirstName} />
           <InputField content="Last name" id="lastname" type="text" onChange={setLastName} />
+          <InputField content="Password" id="password" type="password" onChange={setPassword} />
           <InputField content="Email" id="email" type="text" onChange={setEmail} />
           <InputField content="Organization Name" id="orgName" type="text" onChange={setOrgName} />
           <div className="position">
             <label htmlFor="position">Position in the organization</label>
-            <select name="position" id="position">
+            <select name="position" id="position" onChange={(e) => setPosition(e.target.value)}>
               <option value="president">President</option>
               <option value="vice president">Vice president</option>
               <option value="secretary">Secretary</option>
@@ -37,9 +70,12 @@ function Register() {
             </select>
           </div>
         </div>
+        {err ? <div className="error-container">{err}*</div> : <></>}
         <div className="btn-container">
           <div className="btn reset">Clear</div>
-          <div className="btn submit">Register</div>
+          <div className="btn submit" onClick={() => onSubmitClick()}>
+            Register
+          </div>
         </div>
       </RegisterContainer>
     </Container>
@@ -80,7 +116,7 @@ const Container = styled.div`
 
 const RegisterContainer = styled.div`
   width: 400px;
-  height: 500px;
+  height: max-content;
   background-color: white;
   box-shadow: 0 0 3px 0 black;
   border-radius: 12px;
@@ -88,6 +124,16 @@ const RegisterContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  .error-container {
+    color: red;
+    margin-top: 15px;
+    margin-bottom: -15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+  }
 
   .heading {
     font-size: 1.5rem;
