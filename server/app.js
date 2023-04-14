@@ -137,8 +137,12 @@ app.delete("/deleteReport/:id", (req, res) => {
 app.post("/addUser", (req, res) => {
   dataConfig
     .addUser(req.body)
-    .then(() => {
-      res.status(201).send({ message: "user created", error: false });
+    .then((result) => {
+      if (result.error) {
+        res.status(201).send(result);
+      } else {
+        res.status(200).send(result);
+      }
     })
     .catch((err) => {
       res.status(409).send({ message: err, error: true });

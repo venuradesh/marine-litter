@@ -175,14 +175,22 @@ module.exports.addUser = (userData) => {
       password: userData.password,
     });
 
-    newUser
-      .save()
-      .then(() => {
-        resolve();
-      })
-      .catch((err) => {
-        console.log(err);
-        reject("error in adding user to the database");
+    User.find({ email: userData.email })
+      .exec()
+      .then((res) => {
+        if (res.length === 0) {
+          newUser
+            .save()
+            .then(() => {
+              resolve({ message: "user created", error: false });
+            })
+            .catch((err) => {
+              console.log(err);
+              reject("error in adding user to the database");
+            });
+        } else {
+          resolve({ message: "user email already exist", error: true });
+        }
       });
   });
 };

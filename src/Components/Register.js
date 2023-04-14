@@ -34,6 +34,8 @@ function Register() {
           setErr("");
           if (!res.data.error) {
             navigate("/login");
+          } else {
+            setErr(res.data.message);
           }
         })
         .catch((err) => {
