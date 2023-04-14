@@ -13,6 +13,7 @@ const litterReport = new mongoose.Schema({
   desc: String,
   date: String,
   contact: String,
+  userId: String,
   images: [LitterImage],
 });
 
@@ -54,6 +55,7 @@ module.exports.addReport = (formData) => {
       desc: formData.desc,
       date: formData.date,
       contact: formData.contact,
+      userId: formData.userId,
     });
     if (formData.images.length > 0) {
       formData.images.map((image) => {
@@ -76,9 +78,9 @@ module.exports.addReport = (formData) => {
   });
 };
 
-module.exports.getReports = () => {
+module.exports.getReports = (userId) => {
   return new Promise((resolve, reject) => {
-    Report.find()
+    Report.find({ userId: userId })
       .exec()
       .then((res) => {
         resolve(res);

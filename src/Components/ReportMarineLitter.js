@@ -33,6 +33,7 @@ function ReportMarineLitter() {
       formData.append("desc", desc);
       formData.append("date", date);
       formData.append("contact", contact);
+      formData.append("userId", window.localStorage.getItem("userId"));
 
       axios
         .post(`${API_URL}/addReport`, formData)

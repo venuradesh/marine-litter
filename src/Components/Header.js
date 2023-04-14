@@ -24,9 +24,13 @@ function Header() {
           <img src={BackgroundLogo} alt="background-logo" />
         </div>
         <div className="navigations">
-          <div className="home nav-item">Home</div>
+          <div className="home nav-item" onClick={() => navigate("/reportsOnMarineLitter")}>
+            Home
+          </div>
           <div className="about nav-item">About Us</div>
-          <div className="involved nav-item">Be Involved</div>
+          <div className="involved nav-item" onClick={() => navigate("/reportLitter")}>
+            Be Involved
+          </div>
           <div className="reports nav-item">Reports</div>
           <div className="blog nav-item">Blog</div>
           <div className="shop nav-item">Shop</div>
@@ -95,6 +99,8 @@ const Container = styled.div`
       .nav-item {
         font-family: sans-serif;
         color: white;
+        cursor: pointer;
+        z-index: 100;
       }
     }
 
@@ -123,6 +129,8 @@ const Container = styled.div`
         transform: scaleY(0);
         transform-origin: top;
         transition: all 0.3s ease;
+        z-index: 1000;
+        box-shadow: 0 0 3px 0 black;
 
         &:hover {
           background-color: lightgray;

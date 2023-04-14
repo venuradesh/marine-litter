@@ -19,7 +19,11 @@ function ReportsOnMarineLitter() {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/getReports`)
+      .get(`${API_URL}/getReports`, {
+        headers: {
+          userId: window.localStorage.getItem("userId"),
+        },
+      })
       .then((result) => {
         if (!result.data.error) {
           setFetchedData([...result.data.message]);

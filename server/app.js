@@ -48,6 +48,7 @@ app.post("/addReport", (req, res) => {
     desc: req.body.desc,
     date: req.body.date,
     contact: req.body.contact,
+    userId: req.body.userId,
     images: images,
   };
 
@@ -63,8 +64,9 @@ app.post("/addReport", (req, res) => {
 
 //retreiving reports from the database
 app.get("/getReports", (req, res) => {
+  const userId = req.headers.userid;
   dataConfig
-    .getReports()
+    .getReports(userId)
     .then((result) => {
       res.status(200).send({ message: result, error: false });
     })
