@@ -12,7 +12,7 @@ const API_URL = "http://localhost:8080";
 function EditDeadAnimalReport() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [email, setEmail] = useState("'");
+  const [email, setEmail] = useState("");
   const [typeofDeadAnimal, setTypeofDeadAnimal] = useState("");
   const [time, setTime] = useState("");
   const [desc, setDesc] = useState("");
@@ -24,7 +24,6 @@ function EditDeadAnimalReport() {
   const [imagesChanged, setImagesChanged] = useState(false);
 
   useEffect(() => {
-    console.log(id);
     axios
       .get(`${API_URL}/getAnimalsById`, {
         headers: {
@@ -43,6 +42,33 @@ function EditDeadAnimalReport() {
 
   const onUpdateClick = (e) => {
     e.preventDefault();
+    if (email || typeofDeadAnimal || time || desc || date || contact || imagesChanged || images.length > 0) {
+      const formData = new FormData();
+      if (images.length > 0) {
+        images.map((image) => {
+          formData.append("images", image, image.name);
+        });
+      }
+      formData.append("email", email && email !== fetchedData.email ? email : fetchedData.email);
+      formData.append("typeofDeadAnimal", typeofDeadAnimal && typeofDeadAnimal !== fetchedData.deadAnimalType ? typeofDeadAnimal : fetchedData.deadAnimalType);
+      formData.append("time", time && time !== fetchedData.time ? time : fetchedData.time);
+      formData.append("date", date && date !== fetchedData.date ? date : fetchedData.date);
+      formData.append("desc", desc && desc !== fetchedData.desc ? desc : fetchedData.desc);
+      formData.append("contact", contact && contact !== fetchedData.contact ? contact : fetchedData.contact);
+      formData.append("reportid", id);
+
+      axios
+        .put(`${API_URL}/updateAnimal`, formData)
+        .then((res) => {
+          console.log(res);
+          if (!res.data.error) {
+            navigate("/reportsOnDeadAnimals");
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      navigate("/reportsOnDeadAnimals");
+    }
   };
 
   return (

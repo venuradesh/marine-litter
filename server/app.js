@@ -205,11 +205,40 @@ app.get("/getAnimals", (req, res) => {
 
 app.get("/getAnimalsById", (req, res) => {
   const reportId = req.headers.reportid;
-  console.log(req.headers);
   dataConfig
     .getAnimalById(reportId)
     .then((result) => {
       res.status(200).send({ message: result, error: false });
+    })
+    .catch((err) => {
+      res.status(409).send(err);
+    });
+});
+
+app.put("/updateAnimal", (req, res) => {
+  const images = [];
+  const id = req.body.reportid;
+
+  if (req.files) {
+    req.files.images.map((image) => {
+      images.push({ data: image.data, type: image.mimetype, name: image.name });
+    });
+  }
+
+  const formData = {
+    email: req.body.email,
+    type: req.body.typeofDeadAnimal,
+    desc: req.body.desc,
+    date: req.body.date,
+    contact: req.body.contact,
+    time: req.body.time,
+    images: images,
+  };
+
+  dataConfig
+    .updateAnimals(formData, id)
+    .then(() => {
+      res.status(200).send({ message: "ok", error: false });
     })
     .catch((err) => {
       res.status(409).send(err);

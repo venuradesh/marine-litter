@@ -295,3 +295,55 @@ module.exports.getAnimalById = (id) => {
       });
   });
 };
+
+module.exports.updateAnimals = (animaldata, reportId) => {
+  return new Promise((resolve, reject) => {
+    Animal.findById(reportId)
+      .exec()
+      .then((result) => {
+        Animal.updateOne(
+          { _id: reportId },
+          {
+            $set: {
+              email: animaldata.email,
+              deadAnimalType: animaldata.type,
+              desc: animaldata.desc,
+              date: animaldata.date,
+              contact: animaldata.contact,
+              time: animaldata.time,
+              images: animaldata.images.length > 0 ? [] : [...result.images],
+            },
+          }
+        )
+          .exec()
+          .then((res) => {
+            if (animaldata.images.length > 0) {
+              Animal.updateOne(
+                { _id: reportId },
+                {
+                  $addToSet: { images: [...animaldata.images] },
+                }
+              )
+                .exec()
+                .then((res) => {
+                  resolve();
+                })
+                .catch((err) => {
+                  console.log(err);
+                  reject({ message: "error in updating the images", error: true });
+                });
+            } else {
+              resolve();
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            reject({ message: "error in updating the content", error: true });
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+        reject({ message: "error while finding the particular report", error: true });
+      });
+  });
+};
