@@ -14,8 +14,25 @@ const API_URL = "http://localhost:8080";
 function ReportsOnDeadAnimals() {
   const navigate = useNavigate();
   const [fetchedData, setFetchedData] = useState([]);
+  const [updated, setUpdated] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
-  const onDeleteClick = (id) => {};
+  const onDeleteClick = (id) => {
+    axios
+      .delete(`${API_URL}/deleteAnimal`, {
+        headers: {
+          reportid: id,
+        },
+      })
+      .then((res) => {
+        if (!res.data.error) {
+          setUpdated((prev) => !prev);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
     axios
@@ -26,9 +43,10 @@ function ReportsOnDeadAnimals() {
       })
       .then((res) => {
         setFetchedData([...res.data]);
+        setLoaded(true);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [updated]);
 
   const columns = useMemo(
     () => [
@@ -54,6 +72,7 @@ function ReportsOnDeadAnimals() {
       <div className="table-container">
         <div className="background"></div>
         <div className="heading">Reports on Dead Animals</div>
+
         <table {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => (
@@ -68,42 +87,60 @@ function ReportsOnDeadAnimals() {
               </tr>
             ))}
           </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => {
+          {loaded ? (
+            <>
+              {fetchedData.length > 0 ? (
+                <tbody {...getTableBodyProps()}>
+                  {rows.map((row) => {
+                    prepareRow(row);
                     return (
-                      <>
-                        {cell.column.id !== "images" ? (
-                          <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                        ) : (
-                          <>
-                            <td>
-                              {cell.value.map((data, key) => (
-                                <img src={Image} key={key} alt="imagewrapper" />
-                              ))}
-                            </td>
-                          </>
-                        )}
-                      </>
+                      <tr {...row.getRowProps()}>
+                        {row.cells.map((cell) => {
+                          return (
+                            <>
+                              {cell.column.id !== "images" ? (
+                                <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                              ) : (
+                                <>
+                                  <td>
+                                    {cell.value.map((data, key) => (
+                                      <img src={Image} key={key} alt="imagewrapper" />
+                                    ))}
+                                  </td>
+                                </>
+                              )}
+                            </>
+                          );
+                        })}
+                        <td>
+                          <button className="edit" onClick={() => navigate(`/editAnimalReport/${fetchedData[row.index]._id}`)}>
+                            Edit
+                          </button>
+                        </td>
+                        <td>
+                          <button className="delete" onClick={() => onDeleteClick(fetchedData[row.index]._id)}>
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
                     );
                   })}
-                  <td>
-                    <button className="edit" onClick={() => navigate(`/editAnimalReport/${fetchedData[row.index]._id}`)}>
-                      Edit
-                    </button>
-                  </td>
-                  <td>
-                    <button className="delete" onClick={() => onDeleteClick(fetchedData[row.index]._id)}>
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
+                </tbody>
+              ) : (
+                <tbody>
+                  <tr className="loading">
+                    <td>No data available</td>
+                  </tr>
+                </tbody>
+              )}
+            </>
+          ) : (
+            <tbody>
+              <tr className="loading">
+                <td>Loading</td>
+              </tr>
+            </tbody>
+          )}
         </table>
       </div>
     </Container>

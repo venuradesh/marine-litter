@@ -347,3 +347,13 @@ module.exports.updateAnimals = (animaldata, reportId) => {
       });
   });
 };
+
+module.exports.deleteAnimal = (animalId) => {
+  return new Promise((resolve, reject) => {
+    Animal.findByIdAndRemove(animalId)
+      .then((res) => {
+        resolve();
+      })
+      .catch((err) => reject({ message: "error in deleting the report", error: true }));
+  });
+};
