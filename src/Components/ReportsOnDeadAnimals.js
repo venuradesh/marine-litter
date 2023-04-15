@@ -91,7 +91,7 @@ function ReportsOnDeadAnimals() {
                     );
                   })}
                   <td>
-                    <button className="edit" onClick={() => navigate(`/editDeadAnimalInfo/${fetchedData[row.index]._id}`)}>
+                    <button className="edit" onClick={() => navigate(`/editAnimalReport/${fetchedData[row.index]._id}`)}>
                       Edit
                     </button>
                   </td>

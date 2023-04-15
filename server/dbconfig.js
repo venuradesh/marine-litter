@@ -281,3 +281,17 @@ module.exports.getAnimals = (userId) => {
       });
   });
 };
+
+module.exports.getAnimalById = (id) => {
+  return new Promise((resolve, reject) => {
+    Animal.findById(id)
+      .exec()
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((err) => {
+        console.log(err);
+        reject({ message: "error occured while fetching the report", error: true });
+      });
+  });
+};
