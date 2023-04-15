@@ -14,6 +14,7 @@ import InformationReport from "./Components/InformationReport";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
 import AddAnimal from "./Components/AddAnimal";
+import ReportsOnDeadAnimals from "./Components/ReportsOnDeadAnimals";
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
           <Route exact path="reportsOnMarineLitter" element={<ReportsOnMarineLitter />} />
           <Route exact path="infoReport" element={<InformationReport />} />
           <Route exact path="/addAnimal" element={<AddAnimal />} />
+          <Route exact path="/reportsOnDeadAnimals" element={<ReportsOnDeadAnimals />} />
         </Routes>
       </Router>
     </Container>

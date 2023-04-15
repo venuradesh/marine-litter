@@ -178,12 +178,25 @@ app.post("/addAnimal", (req, res) => {
     contact: req.body.contact,
     time: req.body.time,
     images: images,
+    userId: req.body.userId,
   };
 
   dataConfig
     .addAnimal(animalData)
     .then((result) => {
       res.status(201).send(result);
+    })
+    .catch((err) => {
+      res.status(409).send(err);
+    });
+});
+
+app.get("/getAnimals", (req, res) => {
+  const userId = req.headers.userid;
+  dataConfig
+    .getAnimals(userId)
+    .then((results) => {
+      res.status(200).send(results);
     })
     .catch((err) => {
       res.status(409).send(err);
