@@ -202,3 +202,16 @@ app.get("/getAnimals", (req, res) => {
       res.status(409).send(err);
     });
 });
+
+app.get("/getAnimalsById", (req, res) => {
+  const reportId = req.headers.reportid;
+  console.log(req.headers);
+  dataConfig
+    .getAnimalById(reportId)
+    .then((result) => {
+      res.status(200).send({ message: result, error: false });
+    })
+    .catch((err) => {
+      res.status(409).send(err);
+    });
+});
