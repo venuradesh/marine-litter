@@ -244,3 +244,16 @@ app.put("/updateAnimal", (req, res) => {
       res.status(409).send(err);
     });
 });
+
+app.delete("/deleteAnimal", (req, res) => {
+  const reportId = req.headers.reportid;
+
+  dataConfig
+    .deleteAnimal(reportId)
+    .then(() => {
+      res.status(200).send({ message: "ok", error: false });
+    })
+    .catch((err) => {
+      res.status(409).send(err);
+    });
+});

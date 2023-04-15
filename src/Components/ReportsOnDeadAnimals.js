@@ -14,8 +14,24 @@ const API_URL = "http://localhost:8080";
 function ReportsOnDeadAnimals() {
   const navigate = useNavigate();
   const [fetchedData, setFetchedData] = useState([]);
+  const [updated, setUpdated] = useState(false);
 
-  const onDeleteClick = (id) => {};
+  const onDeleteClick = (id) => {
+    axios
+      .delete(`${API_URL}/deleteAnimal`, {
+        headers: {
+          reportid: id,
+        },
+      })
+      .then((res) => {
+        if (!res.data.error) {
+          setUpdated(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
     axios
@@ -28,7 +44,7 @@ function ReportsOnDeadAnimals() {
         setFetchedData([...res.data]);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [updated]);
 
   const columns = useMemo(
     () => [
