@@ -32,7 +32,7 @@ const animal = new mongoose.Schema({
   desc: String,
   date: String,
   contact: String,
-  time: Number,
+  time: String,
   userId: String,
   images: [LitterImage],
 });
@@ -240,18 +240,30 @@ module.exports.addAnimal = (animalData) => {
       email: animalData.email,
       deadAnimalType: animalData.type,
       desc: animalData.desc,
-      data: animalData.date,
+      date: animalData.date,
       contact: animalData.contact,
       time: animalData.time,
       userId: animalData.userId,
     });
 
-    animalData.images.map((image) => {
-      newAnimal.images.push({
-        name: image.name,
-        type: image.type,
-        data: image.data,
+    if (animalData.images.length > 0) {
+      animalData.images.map((image) => {
+        newAnimal.images.push({
+          name: image.name,
+          type: image.type,
+          data: image.data,
+        });
       });
-    });
+    }
+
+    newAnimal
+      .save()
+      .then(() => {
+        resolve({ message: "animal added", error: false });
+      })
+      .catch((err) => {
+        console.log(err);
+        reject({ message: "error adding the animal to the database", error: true });
+      });
   });
 };

@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+//constants
+const API_URL = "http://localhost:8080";
 
 function AddAnimal() {
   const navigate = useNavigate();
@@ -13,7 +17,43 @@ function AddAnimal() {
   const [images, setImages] = useState([]);
   const [err, setError] = useState("");
 
-  const onSubmitClick = (e) => {};
+  const onSubmitClick = (e) => {
+    e.preventDefault();
+    if (email && typeofDeadAnimal && desc && date && contact) {
+      const formData = new FormData();
+      if (images.length > 0) {
+        if (images.length < 3) {
+          setError("Upload 3 or more images");
+          setImages([]);
+          return;
+        } else {
+          images.map((image) => {
+            console.log(image);
+            formData.append("images", image, image.name);
+          });
+        }
+      }
+      formData.append("email", email);
+      formData.append("deadAnimalType", typeofDeadAnimal);
+      formData.append("time", time);
+      formData.append("desc", desc);
+      formData.append("date", date);
+      formData.append("contact", contact);
+
+      axios
+        .post(`${API_URL}/addAnimal`, formData)
+        .then((res) => {
+          if (!res.data.error) {
+            navigate("/");
+          }
+        })
+        .catch((err) => {
+          setError("error occured. Check your internet connetion");
+        });
+    } else {
+      setError("Fill all the required fields");
+    }
+  };
 
   return (
     <Container>
@@ -57,7 +97,7 @@ function AddAnimal() {
           </div>
           <div className="contact item">
             <label htmlFor="tel">
-              Time: (24 Hours format)<span>*</span> <span className="sub">Provide time when the incident was noticed</span>
+              Time: (24 Hours format) <span className="sub">Provide time when the incident was noticed</span>
             </label>
             <input type="time" name="time" id="time" onChange={(e) => setTime(e.target.value)} />
           </div>
@@ -67,7 +107,7 @@ function AddAnimal() {
             </label>
             <input type="tel" name="tel" id="tel" onChange={(e) => setContact(e.target.value)} />
           </div>
-          {err ? <div className="error">Please fill required fields</div> : <></>}
+          {err ? <div className="error">{err}</div> : <></>}
           <div className="btns item">
             <label htmlFor=""></label>
             <div className="btn-container">

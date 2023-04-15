@@ -161,3 +161,31 @@ app.get("/checkUser", (req, res) => {
       res.status(409).send({ message: err, error: true });
     });
 });
+
+//animal section
+app.post("/addAnimal", (req, res) => {
+  const images = [];
+  req.files &&
+    req.files.images.map((image) => {
+      images.push({ name: image.name, type: image.mimetype, data: image.data });
+    });
+
+  const animalData = {
+    email: req.body.email,
+    type: req.body.deadAnimalType,
+    desc: req.body.desc,
+    date: req.body.date,
+    contact: req.body.contact,
+    time: req.body.time,
+    images: images,
+  };
+
+  dataConfig
+    .addAnimal(animalData)
+    .then((result) => {
+      res.status(201).send(result);
+    })
+    .catch((err) => {
+      res.status(409).send(err);
+    });
+});
