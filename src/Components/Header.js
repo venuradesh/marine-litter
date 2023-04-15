@@ -8,7 +8,9 @@ import User from "../assets/user.png";
 
 function Header() {
   const navigate = useNavigate();
+  const [reportClicked, setReportClicked] = useState(false);
   const [logoutClicked, setLogoutClicked] = useState(false);
+  const [involveClicked, setInvolveClicked] = useState(false);
 
   const onLoginClicked = () => {
     window.localStorage.removeItem("userId");
@@ -28,10 +30,28 @@ function Header() {
             Home
           </div>
           <div className="about nav-item">About Us</div>
-          <div className="involved nav-item" onClick={() => navigate("/reportLitter")}>
+          <div className="involved nav-item" onClick={() => (involveClicked ? setInvolveClicked(false) : setInvolveClicked(true))}>
             Be Involved
+            <div className={`popup-container ${involveClicked ? "active" : ""}`}>
+              <div className="item" onClick={() => navigate("reportLitter")}>
+                Add Litter Report
+              </div>
+              <div className="item" onClick={() => navigate("addAnimal")}>
+                Add Dead Animal Report
+              </div>
+            </div>
           </div>
-          <div className="reports nav-item">Reports</div>
+          <div className="reports nav-item" onClick={() => (reportClicked ? setReportClicked(false) : setReportClicked(true))}>
+            Reports
+            <div className={`popup-container ${reportClicked ? "active" : ""}`}>
+              <div className="item" onClick={() => navigate("reportsOnMarineLitter")}>
+                Marine Litter
+              </div>
+              <div className="item" onClick={() => navigate("reportsOnDeadAnimals")}>
+                Marine dead Animals
+              </div>
+            </div>
+          </div>
           <div className="blog nav-item">Blog</div>
           <div className="shop nav-item">Shop</div>
         </div>
@@ -101,6 +121,39 @@ const Container = styled.div`
         color: white;
         cursor: pointer;
         z-index: 100;
+        position: relative;
+
+        .popup-container {
+          position: absolute;
+          top: 60px;
+          left: -50px;
+          width: max-content;
+          display: flex;
+          flex-direction: column;
+          background-color: white;
+          box-shadow: 0 0 3px 0 black;
+          transition: all 0.3s ease;
+          transform: scaleY(0);
+          transform-origin: top;
+
+          &.active {
+            transform: scaleY(1);
+          }
+
+          .item {
+            color: black;
+            width: 100%;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-inline: 10px;
+
+            &:hover {
+              background-color: lightgray;
+            }
+          }
+        }
       }
     }
 
