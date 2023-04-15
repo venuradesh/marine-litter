@@ -28,7 +28,6 @@ function ReportsOnMarineLitter() {
         if (!result.data.error) {
           setFetchedData([...result.data.message]);
           setLoaded(true);
-          console.log(result.data.message[0]._id);
         }
       })
       .catch((err) => {
