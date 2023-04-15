@@ -8,7 +8,7 @@ const API_URL = "http://localhost:8080";
 
 function AddAnimal() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("'");
+  const [email, setEmail] = useState("");
   const [typeofDeadAnimal, setTypeofDeadAnimal] = useState("");
   const [time, setTime] = useState("");
   const [desc, setDesc] = useState("");
