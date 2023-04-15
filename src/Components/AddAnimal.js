@@ -45,7 +45,7 @@ function AddAnimal() {
         .post(`${API_URL}/addAnimal`, formData)
         .then((res) => {
           if (!res.data.error) {
-            navigate("/");
+            navigate("/reportsOnDeadAnimals");
           }
         })
         .catch((err) => {
