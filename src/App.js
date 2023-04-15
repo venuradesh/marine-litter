@@ -13,6 +13,7 @@ import ReportsOnMarineLitter from "./Components/ReportsOnMarineLitter";
 import InformationReport from "./Components/InformationReport";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
+import AddAnimal from "./Components/AddAnimal";
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
           <Route exact path="editLitterInformation/:id" element={<EditMarinLItterInformation />} />
           <Route exact path="reportsOnMarineLitter" element={<ReportsOnMarineLitter />} />
           <Route exact path="infoReport" element={<InformationReport />} />
+          <Route exact path="/addAnimal" element={<AddAnimal />} />
         </Routes>
       </Router>
     </Container>

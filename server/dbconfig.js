@@ -26,9 +26,21 @@ const user = new mongoose.Schema({
   password: String,
 });
 
+const animal = new mongoose.Schema({
+  email: String,
+  deadAnimalType: String,
+  desc: String,
+  date: String,
+  contact: String,
+  time: Number,
+  userId: String,
+  images: [LitterImage],
+});
+
 let Report;
 let Image;
 let User;
+let Animal;
 
 module.exports.initialize = () => {
   return new Promise((resolve, reject) => {
@@ -41,6 +53,7 @@ module.exports.initialize = () => {
       Report = db.model("litterReports", litterReport);
       Image = db.model("litterImages", LitterImage);
       User = db.model("user", user);
+      Animal = db.model("animal", animal);
       resolve();
     });
   });
@@ -166,6 +179,8 @@ module.exports.deleteReport = (id) => {
   });
 };
 
+//animal section
+
 module.exports.addUser = (userData) => {
   return new Promise((resolve, reject) => {
     const newUser = new User({
@@ -215,5 +230,28 @@ module.exports.checkUser = (email, password) => {
       .catch((err) => {
         reject("error finding the user");
       });
+  });
+};
+
+//animal section
+module.exports.addAnimal = (animalData) => {
+  return new Promise((resolve, reject) => {
+    const newAnimal = new Animal({
+      email: animalData.email,
+      deadAnimalType: animalData.type,
+      desc: animalData.desc,
+      data: animalData.date,
+      contact: animalData.contact,
+      time: animalData.time,
+      userId: animalData.userId,
+    });
+
+    animalData.images.map((image) => {
+      newAnimal.images.push({
+        name: image.name,
+        type: image.type,
+        data: image.data,
+      });
+    });
   });
 };
